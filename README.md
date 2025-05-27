@@ -1,9 +1,21 @@
-# Lab03-new
-javac -d bin src/main/java/com/example/gamedata/*.java -> Compilar
+# Compilar todos los archivos Java
+mkdir -p bin
+javac -d bin src/main/java/com/example/gamedata/*.java
 
+# Ejecutar Main
+java -cp bin com.example.gamedata.Main
 
-java -cp bin com.example.gamedata.Main-> Ejecutar
+# Ejecutar Dataset
+java -cp bin com.example.gamedata.Dataset
 
-java -cp bin com.example.gamedata.Dataset-> Ejecutar
+# Ejecutar Game
+java -cp bin com.example.gamedata.Game
 
-java -cp bin com.example.gamedata.Game-> Ejecutar
+# Ejecutar BenchmarkRunner
+java -cp bin com.example.gamedata.BenchmarkRunner
+
+# Ejecutar SearchBenchmarkRunner
+java -cp bin com.example.gamedata.SearchBenchmarkRunner
+
+# Ejecutar GenerateData
+java -cp bin com.example.gamedata.GenerateData
