@@ -1,4 +1,4 @@
-package com.example.gamedata; // Asegúrate de usar tu estructura de paquete
+package com.example.gamedata;
 import com.example.gamedata.Game;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -33,8 +33,7 @@ public class GenerateData {
     private static String generateRandomName() {
         String part1 = NAME_PART_1[random.nextInt(NAME_PART_1.length)];
         String part2 = NAME_PART_2[random.nextInt(NAME_PART_2.length)];
-        // Para CSV, es mejor evitar comas en los nombres o manejarlas adecuadamente (ej. entrecomillando)
-        // Por simplicidad, aquí los unimos sin espacio, lo que reduce la chance de comas.
+        // Combina las dos partes con un espacio entre ellas
         return part1 + part2;
     }
 
@@ -51,8 +50,6 @@ public class GenerateData {
     }
 
     /**
-     * Genera una lista de videojuegos de tamaño N con atributos aleatorios.
-     * (Este método ya lo tenías)
      * @param N El número de juegos a generar.
      * @return Una ArrayList de objetos Game generados aleatoriamente.
      */
@@ -72,9 +69,6 @@ public class GenerateData {
     }
 
     /**
-     * Guarda una lista de juegos en un archivo CSV.
-     * Cada juego se guarda en una nueva línea, con atributos separados por comas.
-     * Formato: name,category,price,quality
      * @param gamesList La lista de juegos a guardar.
      * @param filename El nombre del archivo donde se guardarán los datos (ej. "games_100.csv").
      */
@@ -91,8 +85,7 @@ public class GenerateData {
             writer.write("Name,Category,Price,Quality\n");
 
             for (Game game : gamesList) {
-                // Crear la línea CSV. Asegurarse de que los nombres/categorías con comas se manejen
-                // (ej. entrecomillando). Por ahora, asumimos que no tienen comas internas.
+                // Escapar valores para CSV y unirlos con comas
                 String line = String.join(",",
                         escapeCsvValue(game.getName()),
                         escapeCsvValue(game.getCategory()),
@@ -110,8 +103,6 @@ public class GenerateData {
     }
     
     /**
-     * Helper para escapar valores para CSV. Si el valor contiene una coma o comillas dobles,
-     * lo encierra entre comillas dobles y duplica las comillas dobles internas.
      * @param value el String a escapar.
      * @return el String escapado para CSV.
      */

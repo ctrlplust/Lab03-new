@@ -1,4 +1,4 @@
-package com.example.gamedata; // O tu paquete
+package com.example.gamedata; // Ocupamos el paquete ya que es el mas adecuacdo para este laboratorio, Crear subcarpetas lo encontramos bastante necesario para organizar el código
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -30,16 +30,15 @@ public class SearchBenchmarkRunner {
         }
         System.out.println("Dataset cargado con " + fullDatasetGames.size() + " juegos.");
 
-        // --- 1. Pruebas para getGamesByPrice ---
+        // 1 Pruebas para getGamesByPrice 
         benchmarkSearch("getGamesByPrice", fullDatasetGames, dataset -> {
-            // Seleccionar un precio aleatorio que EXISTA en el dataset
             Game randomGame = fullDatasetGames.get(random.nextInt(fullDatasetGames.size()));
             int priceToSearch = randomGame.getPrice();
             return dataset.getGamesByPrice(priceToSearch);
         }, "price");
 
 
-        // --- 2. Pruebas para getGamesByPriceRange ---
+        //  2 Pruebas para getGamesByPriceRange 
         benchmarkSearch("getGamesByPriceRange", fullDatasetGames, dataset -> {
             // Seleccionar un rango de precios aleatorio
             int price1 = fullDatasetGames.get(random.nextInt(fullDatasetGames.size())).getPrice();
@@ -50,7 +49,7 @@ public class SearchBenchmarkRunner {
             return dataset.getGamesByPriceRange(minPrice, maxPrice);
         }, "price");
 
-        // --- 3. Pruebas para getGamesByCategory ---
+        //  3 Pruebas para getGamesByCategory 
         benchmarkSearch("getGamesByCategory", fullDatasetGames, dataset -> {
             // Seleccionar una categoría aleatoria que EXISTA
             Game randomGame = fullDatasetGames.get(random.nextInt(fullDatasetGames.size()));
@@ -58,7 +57,7 @@ public class SearchBenchmarkRunner {
             return dataset.getGamesByCategory(categoryToSearch);
         }, "category");
 
-        // --- 4. Pruebas para getGamesByQuality (si aplica) ---
+        // 4 Pruebas para getGamesByQuality (si aplica)
         benchmarkSearch("getGamesByQuality", fullDatasetGames, dataset -> {
             Game randomGame = fullDatasetGames.get(random.nextInt(fullDatasetGames.size()));
             int qualityToSearch = randomGame.getQuality();
@@ -71,7 +70,7 @@ public class SearchBenchmarkRunner {
     }
 
     /**
-     * Interfaz funcional para representar la operación de búsqueda a medir.
+     * Interfaz funcional para representar la operación de búsqueda a medir, Se busco una forma mas elegante y visualmente atractiva para representar la medicion de tiempo de búsqueda.
      */
     @FunctionalInterface
     interface SearchOperation {
@@ -107,7 +106,7 @@ public class SearchBenchmarkRunner {
 
         System.out.print("  Lineal: ");
         for (int i = 0; i < NUMBER_OF_SEARCH_RUNS; i++) {
-            // Crear una copia para asegurar que el estado no se altera entre búsquedas si la op lo hiciera
+            // Crear una copia para asegurar que el estado no se altera
             Dataset currentLinearDataset = new Dataset(new ArrayList<>(baseGames)); 
             // Podríamos asegurarnos que no está ordenado por el atributo:
             if (attributeToSortForBinary.equals(currentLinearDataset.getSortedByAttribute())) {
@@ -119,7 +118,6 @@ public class SearchBenchmarkRunner {
             List<Game> result = operation.search(currentLinearDataset);
             long endTime = System.nanoTime();
             totalDurationLinearNs += (endTime - startTime);
-            // System.out.println("    Run " + (i+1) + " lineal: " + (endTime - startTime) + " ns, encontrados: " + result.size());
         }
         double avgLinearMs = (double) totalDurationLinearNs / NUMBER_OF_SEARCH_RUNS / 1_000_000.0;
         System.out.printf("Tiempo Promedio: %.6f ms%n", avgLinearMs);
@@ -127,7 +125,7 @@ public class SearchBenchmarkRunner {
 
         // === Búsqueda Binaria ===
         // Primero, ordenar el dataset por el atributo relevante
-        Dataset binaryDataset = new Dataset(new ArrayList<>(baseGames)); // Copia fresca
+        Dataset binaryDataset = new Dataset(new ArrayList<>(baseGames));
         // System.out.print("  Ordenando para binaria por " + attributeToSortForBinary + "... ");
         // long sortStartTime = System.nanoTime();
         binaryDataset.sortByAlgorithm("collections.sort", attributeToSortForBinary, false); // Usar el más rápido
@@ -136,12 +134,10 @@ public class SearchBenchmarkRunner {
 
         System.out.print("  Binaria: ");
         for (int i = 0; i < NUMBER_OF_SEARCH_RUNS; i++) {
-             // No es necesario recrear binaryDataset aquí si la operación de búsqueda no modifica el dataset
             long startTime = System.nanoTime();
             List<Game> result = operation.search(binaryDataset); // binaryDataset YA está ordenado
             long endTime = System.nanoTime();
             totalDurationBinaryNs += (endTime - startTime);
-            // System.out.println("    Run " + (i+1) + " binaria: " + (endTime - startTime) + " ns, encontrados: " + result.size());
         }
         double avgBinaryMs = (double) totalDurationBinaryNs / NUMBER_OF_SEARCH_RUNS / 1_000_000.0;
         System.out.printf("Tiempo Promedio: %.6f ms%n", avgBinaryMs);
@@ -152,7 +148,8 @@ public class SearchBenchmarkRunner {
     public static ArrayList<Game> loadGamesFromCSV(String filename) {
         ArrayList<Game> games = new ArrayList<>();
         String line = "";
-        String cvsSplitBy = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"; // Regex para CSV que maneja comas dentro de comillas
+        // Expresión regular para dividir correctamente los campos CSV, incluso si hay comas dentro de comillas
+        String cvsSplitBy = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"; 
 
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             br.readLine(); // Saltar encabezado

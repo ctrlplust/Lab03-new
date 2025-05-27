@@ -1,4 +1,4 @@
-package com.example.gamedata; // O tu paquete
+package com.example.gamedata;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,12 +16,9 @@ public class BenchmarkRunner {
     );
 
     // Tamaños de N como se especifica: 10^2, 10^4, 10^6
-    // ¡CUIDADO! 10^6 (1,000,000) será MUY lento para O(N^2) como BubbleSort, InsertionSort, SelectionSort.
-    // Es probable que estos superen los 300 segundos.
-    private static final int[] DATASET_SIZES_N = {100, 10000}; // Empezamos con estos, luego añadimos 1_000_000
-    // private static final int[] DATASET_SIZES_N = {100, 10000, 1000000}; // Para la prueba completa
+    private static final int[] DATASET_SIZES_N = {100,1000,10000}; // Empezamos con estos, luego añadimos 1_000_000
+    
 
-    // Timeout en segundos para cada ejecución individual de un algoritmo
     private static final long SINGLE_RUN_TIMEOUT_SECONDS = 300; // 300 segundos = 5 minutos
 
 
@@ -47,7 +44,7 @@ public class BenchmarkRunner {
         ExecutorService executor = Executors.newSingleThreadExecutor();
 
         for (String attribute : ATTRIBUTES_TO_SORT_BY) {
-            System.out.println("\n=========================================================");
+            // Imprimir encabezado para el atributo actual
             System.out.println(" ATRIBUTO DE ORDENAMIENTO: " + attribute.toUpperCase());
             System.out.println("=========================================================");
 
@@ -58,9 +55,6 @@ public class BenchmarkRunner {
                     System.out.print("  Procesando N = " + N + "... ");
 
                     // Cargar o generar dataset base para este N
-                    // Para benchmarks consistentes, es mejor cargar desde los archivos generados previamente.
-                    // Si no, generar uno nuevo cada vez es aceptable, pero los datos serán diferentes entre atributos.
-                    // Por ahora, seguiremos generando para simplificar el runner.
                     // Idealmente, aquí se leería el archivo "games_N" + N + ".csv"
                     ArrayList<Game> baseGeneratedGames = loadOrGenerateGames(N, attribute); // Nueva función para cargar/generar
                      if (baseGeneratedGames == null || (baseGeneratedGames.isEmpty() && N > 0)) {
@@ -75,7 +69,7 @@ public class BenchmarkRunner {
                     boolean timeoutOccurredOverall = false;
 
                     for (int i = 0; i < NUMBER_OF_RUNS; i++) {
-                        final ArrayList<Game> gamesToSort = new ArrayList<>(baseGeneratedGames); // COPIA FRESCA
+                        final ArrayList<Game> gamesToSort = new ArrayList<>(baseGeneratedGames);
                         final Dataset dataset = new Dataset(gamesToSort);
                         
                         Callable<Long> task = () -> {
@@ -93,7 +87,6 @@ public class BenchmarkRunner {
                             durationNsThisRun = future.get(SINGLE_RUN_TIMEOUT_SECONDS, TimeUnit.SECONDS);
                             totalDurationNs += durationNsThisRun;
                             successfulRuns++;
-                            // System.out.println("    Run " + (i+1) + ": " + durationNsThisRun / 1_000_000.0 + " ms");
                         } catch (TimeoutException e) {
                             future.cancel(true); // Interrumpir la tarea si es posible
                             System.out.print("[TIMEOUT en run " + (i+1) + "] ");
@@ -129,9 +122,7 @@ public class BenchmarkRunner {
         System.out.println("\n--- Benchmarks Completados ---");
     }
 
-    // Función placeholder para cargar datos. Deberías implementar la lectura de CSV aquí.
     private static ArrayList<Game> loadOrGenerateGames(int N, String attributeForContext) {
-        // TODO: Implementar la lectura desde los archivos CSV generados por GenerateData.
         // Por ejemplo: "data_generated/games_N" + N + ".csv"
         // Si el archivo no existe o hay un error, entonces generar.
         // Por ahora, solo generamos:
@@ -160,17 +151,18 @@ public class BenchmarkRunner {
                     } else {
                         timeStr = String.format("%.3f", timeMs);
                     }
-                    // Formatear N para que coincida con 10^X
+                    // Formatear N para mostrar como 10^2, 10^3, etc.
                     String nStr = "";
                     if (N == 100) nStr = "10^2";
+                    else if (N == 1000) nStr = "10^3";
                     else if (N == 10000) nStr = "10^4";
                     else if (N == 1000000) nStr = "10^6";
                     else nStr = String.valueOf(N);
                     
                     System.out.printf("| %-20s | %-20s | %-25s |\n", algorithm, nStr, timeStr);
                 }
-                 if (Arrays.asList(DATASET_SIZES_N).size() > 0 && !algorithm.equals(ALGORITHMS_TO_TEST.get(ALGORITHMS_TO_TEST.size() -1))) { // No imprimir línea extra al final
-                    // System.out.println("|----------------------|----------------------|---------------------------|"); // Línea separadora entre algoritmos si se desea
+                 if (Arrays.asList(DATASET_SIZES_N).size() > 0 && !algorithm.equals(ALGORITHMS_TO_TEST.get(ALGORITHMS_TO_TEST.size() -1))) { 
+                    System.out.println("--------------------------------------------------------------------------");
                  }
             }
             System.out.println("--------------------------------------------------------------------------");

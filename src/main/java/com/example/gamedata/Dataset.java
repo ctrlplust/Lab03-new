@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-// ... (otras importaciones que ya tenías)
 
 public class Dataset {
     private ArrayList<Game> data;
@@ -28,16 +27,10 @@ public class Dataset {
         return sortedByAttribute;
     }
 
-    // ... (TODOS tus métodos de búsqueda: getGamesByPrice, getGamesByPriceRange, etc.) ...
-    // ... (TODOS tus métodos helper de búsqueda: linearSearchByPrice, binarySearchForExactPrice, etc.) ...
-    // ... (TODOS tus métodos de ordenamiento: sortByAlgorithm, bubbleSort, insertionSort, etc.) ...
-    // PEGA AQUÍ TODO EL CÓDIGO DE LOS MÉTODOS DE DATASET QUE TE PROPORCIONÉ ANTERIORMENTE
-
     // --- MÉTODOS DE BÚSQUEDA ---
 
     public ArrayList<Game> getGamesByPrice(int price) {
         if ("price".equals(this.sortedByAttribute)) {
-            // System.out.println("DEBUG: getGamesByPrice usando Búsqueda Binaria");
             return binarySearchForExactPrice(price);
         } else {
             System.out.println("INFO: getGamesByPrice - Dataset no ordenado por precio. Usando búsqueda lineal.");
@@ -157,7 +150,6 @@ public class Dataset {
 
     public ArrayList<Game> getGamesByCategory(String category) {
         if ("category".equals(this.sortedByAttribute)) {
-            // System.out.println("DEBUG: getGamesByCategory usando Búsqueda Binaria");
             return binarySearchForExactCategory(category);
         } else {
             System.out.println("INFO: getGamesByCategory - Dataset no ordenado por categoría. Usando búsqueda lineal.");
@@ -186,7 +178,7 @@ public class Dataset {
 
     private <T> ArrayList<Game> binarySearchForExactAttribute(T targetValue, Comparator<Game> comparator, java.util.function.Predicate<Game> exactMatchPredicate) {
         ArrayList<Game> result = new ArrayList<>();
-        Game keyGame; // Placeholder
+        Game keyGame; 
         if (targetValue instanceof String && comparator == CATEGORY_COMPARATOR) {
             keyGame = new Game("", (String)targetValue, 0,0);
         } else if (targetValue instanceof Integer && comparator == QUALITY_COMPARATOR) {
@@ -194,10 +186,8 @@ public class Dataset {
         } else {
              System.err.println("Advertencia: binarySearchForExactAttribute con tipo/comparador no manejado explícitamente. La precisión puede variar.");
              // Fallback a una búsqueda menos precisa o lineal si es necesario.
-             // Para este ejemplo, asumiremos que el comparador es el correcto y Collections.binarySearch funcionará.
+             // Para este ejemplo, asumimos que el comparador es el correcto y Collections.binarySearch funcionará.
              // Una implementación más robusta requeriría crear un Game 'clave' específico para cada tipo de T y comparador.
-             // Este es un punto donde el código podría necesitar más generalización o especialización.
-             // Por ahora, nos apoyamos en que los métodos públicos llaman a este con los comparadores correctos.
              if (targetValue instanceof String) keyGame = new Game("", (String)targetValue, 0,0);
              else if (targetValue instanceof Integer) keyGame = new Game("dummy", "dummy", (Integer)targetValue, (Integer)targetValue); // Podría ser precio o calidad
              else return linearSearchByAttribute(exactMatchPredicate); // No se puede crear un dummy
@@ -286,10 +276,8 @@ public class Dataset {
         long startTime = System.nanoTime();
         String algoLower = (algorithm != null) ? algorithm.toLowerCase() : "collections.sort";
 
-        // Hacemos una copia para los algoritmos que modifican in-place si no queremos alterar this.data directamente
+        // Hacemos una copia para los algoritmos de ordenamiento que no modifican directamente this.data.
         // O, como está ahora, this.data se modifica directamente.
-        // ArrayList<Game> listToSort = new ArrayList<>(this.data); // Si quisieras trabajar sobre copia
-
         switch (algoLower) {
             case "bubblesort":
                 bubbleSort(this.data, selectedComparator);
@@ -310,7 +298,6 @@ public class Dataset {
                 Collections.sort(this.data, selectedComparator);
                 break;
         }
-        // this.data = listToSort; // Si trabajaste sobre copia
         this.sortedByAttribute = effectiveAttribute;
         long endTime = System.nanoTime();
         if (printExecutionTime) {
@@ -319,7 +306,6 @@ public class Dataset {
     }
 
     // --- IMPLEMENTACIONES DE ALGORITMOS DE ORDENAMIENTO ---
-    // (Bubble, Insertion, Selection, Merge, Quick - como los tenías antes)
     private void bubbleSort(ArrayList<Game> list, Comparator<Game> comparator) {
         int n = list.size();
         boolean swapped;
@@ -422,11 +408,11 @@ public class Dataset {
         ArrayList<Game> initialGames = new ArrayList<>(Arrays.asList(
                 new Game("Witcher 3", "RPG", 25000, 95),
                 new Game("Cyberpunk", "RPG", 45000, 70),
-                new Game("RDR2", "Action-Adventure", 30000, 98),
+                new Game("RDR2", "Accion-Aventura", 30000, 98),
                 new Game("Doom", "FPS", 20000, 90),
-                new Game("Zelda BOTW", "Action-Adventure", 40000, 97),
-                new Game("Stardew", "Simulation", 10000, 96),
-                new Game("Dark Souls", "Action-RPG", 20000, 89) // Otro juego con precio 20000
+                new Game("Zelda BOTW", "Accion-Aventura", 40000, 97),
+                new Game("Stardew", "Simulacion", 10000, 96),
+                new Game("Dark Souls", "Accion-RPG", 20000, 89) // Otro juego con precio 20000
         ));
 
         Dataset testDataset = new Dataset(new ArrayList<>(initialGames)); // Usar copia para no modificar initialGames
@@ -494,17 +480,16 @@ public class Dataset {
         System.out.println("\nOrdenado por precio (quickSort):");
         sortTestDataset.getData().forEach(g -> System.out.println("  " + g.getName() + " - " + g.getPrice()));
 
-        sortTestDataset.sortByAlgorithm("bubbleSort", "name"); // 'name' no es un atributo soportado, debería default a 'price' o manejarse
-                                                              // Lo actualicé para que default a 'price', pero para prueba vamos a usar 'category'
+        sortTestDataset.sortByAlgorithm("bubbleSort", "name"); 
         sortTestDataset.sortByAlgorithm("bubbleSort", "category");
         System.out.println("\nOrdenado por categoria (bubbleSort):");
         sortTestDataset.getData().forEach(g -> System.out.println("  " + g.getName() + " - " + g.getCategory()));
 
-        sortTestDataset.sortByAlgorithm("unknownAlgorithm", "quality"); // Debería usar Collections.sort()
+        sortTestDataset.sortByAlgorithm("unknownAlgorithm", "quality"); 
         System.out.println("\nOrdenado por calidad (Collections.sort - fallback):");
         sortTestDataset.getData().forEach(g -> System.out.println("  " + g.getName() + " - " + g.getQuality()));
         
-        sortTestDataset.sortByAlgorithm("insertionSort", "unknownAttribute"); // Debería usar price por defecto
+        sortTestDataset.sortByAlgorithm("insertionSort", "unknownAttribute"); 
         System.out.println("\nOrdenado por atributo desconocido (debería ser price, insertionSort):");
         sortTestDataset.getData().forEach(g -> System.out.println("  " + g.getName() + " - " + g.getPrice()));
 
