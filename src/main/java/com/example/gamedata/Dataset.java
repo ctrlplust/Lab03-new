@@ -37,9 +37,10 @@ public class Dataset {
 
     public ArrayList<Game> getGamesByPrice(int price) {
         if ("price".equals(this.sortedByAttribute)) {
+            // System.out.println("DEBUG: getGamesByPrice usando Búsqueda Binaria");
             return binarySearchForExactPrice(price);
         } else {
-            System.out.println("Dataset no ordenado por precio. Usando búsqueda lineal para getGamesByPrice.");
+            System.out.println("INFO: getGamesByPrice - Dataset no ordenado por precio. Usando búsqueda lineal.");
             return linearSearchByPrice(price);
         }
     }
@@ -156,9 +157,10 @@ public class Dataset {
 
     public ArrayList<Game> getGamesByCategory(String category) {
         if ("category".equals(this.sortedByAttribute)) {
-            return binarySearchForExactAttribute(category, CATEGORY_COMPARATOR, game -> game.getCategory().equalsIgnoreCase(category));
+            // System.out.println("DEBUG: getGamesByCategory usando Búsqueda Binaria");
+            return binarySearchForExactCategory(category);
         } else {
-            System.out.println("Dataset no ordenado por categoría. Usando búsqueda lineal para getGamesByCategory.");
+            System.out.println("INFO: getGamesByCategory - Dataset no ordenado por categoría. Usando búsqueda lineal.");
             return linearSearchByAttribute(game -> game.getCategory().equalsIgnoreCase(category));
         }
     }
@@ -225,9 +227,46 @@ public class Dataset {
         return result;
     }
 
+    private ArrayList<Game> binarySearchForExactCategory(String category) {
+        ArrayList<Game> result = new ArrayList<>();
+        int left = 0;
+        int right = data.size() - 1;
+        // Suponiendo que los juegos están ordenados por categoría
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            Game midGame = data.get(mid);
+            int cmp = midGame.getCategory().compareTo(category);
+            if (cmp == 0) {
+                // Encuentra todos los juegos con la categoría (puede haber varios)
+                // Busca hacia la izquierda
+                int i = mid;
+                while (i >= 0 && data.get(i).getCategory().equals(category)) {
+                    result.add(data.get(i));
+                    i--;
+                }
+                // Busca hacia la derecha
+                i = mid + 1;
+                while (i < data.size() && data.get(i).getCategory().equals(category)) {
+                    result.add(data.get(i));
+                    i++;
+                }
+                break;
+            } else if (cmp < 0) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return result;
+    }
+
     // --- MÉTODO DE ORDENAMIENTO ---
 
     public void sortByAlgorithm(String algorithm, String attribute) {
+        sortByAlgorithm(algorithm, attribute, true); // Por defecto imprime el tiempo
+    }
+
+    public void sortByAlgorithm(String algorithm, String attribute, boolean printExecutionTime) {
         Comparator<Game> selectedComparator;
         String effectiveAttribute = (attribute != null) ? attribute.toLowerCase() : "price";
 
@@ -274,7 +313,9 @@ public class Dataset {
         // this.data = listToSort; // Si trabajaste sobre copia
         this.sortedByAttribute = effectiveAttribute;
         long endTime = System.nanoTime();
-        System.out.println("Sorted by " + effectiveAttribute + " using " + algoLower + ". Time: " + (endTime - startTime) + " ns. Size: " + this.data.size());
+        if (printExecutionTime) {
+            System.out.println("Sorted by " + effectiveAttribute + " using " + algoLower + ". Time: " + (endTime - startTime) + " ns. Size: " + this.data.size());
+        }
     }
 
     // --- IMPLEMENTACIONES DE ALGORITMOS DE ORDENAMIENTO ---
