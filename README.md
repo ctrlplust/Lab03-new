@@ -1,5 +1,6 @@
 # Compilar todos los archivos Java
 mkdir -p bin
+
 javac -d bin src/main/java/com/example/gamedata/*.java
 
 # Ejecutar Main
