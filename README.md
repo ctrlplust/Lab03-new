@@ -1,8 +1,10 @@
 # Compilar todos los archivos Java
-mkdir -p bin
-
+mkdir -p bin -> Creas la carpeta bin para guardar todos los .class, y poder compilar el codigo.
+si es que lo quieres eliminar:
+rm -r bin
+``
 javac -d bin src/main/java/com/example/gamedata/*.java
-
+``
 # Ejecutar Main
 java -cp bin com.example.gamedata.Main
 
@@ -19,4 +21,7 @@ java -cp bin com.example.gamedata.BenchmarkRunner
 java -cp bin com.example.gamedata.SearchBenchmarkRunner
 
 # Ejecutar GenerateData
-java -cp bin com.example.gamedata.GenerateData
+java -cp bin com.example.gamedata.GenerateData-->
+Esta generada en el repositorio si quieres eliminarla
+rm -r data_generated
+
