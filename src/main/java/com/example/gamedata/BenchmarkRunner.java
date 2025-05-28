@@ -1,5 +1,7 @@
 package com.example.gamedata;
-
+import com.example.gamedata.Game;
+import com.example.gamedata.Dataset;
+import com.example.gamedata.GenerateData;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,10 +18,10 @@ public class BenchmarkRunner {
     );
 
     // Tamaños de N como se especifica: 10^2, 10^4, 10^6
-    private static final int[] DATASET_SIZES_N = {100,1000,10000}; // Empezamos con estos, luego añadimos 1_000_000
+    private static final int[] DATASET_SIZES_N = {100,10000,1000000}; // Empezamos con estos, luego añadimos 1_000_000
     
 
-    private static final long SINGLE_RUN_TIMEOUT_SECONDS = 300; // 300 segundos = 5 minutos
+    private static final long SINGLE_RUN_TIMEOUT_SECONDS = 30; // 300 segundos = 5 minutos
 
 
     // Estructura para almacenar los resultados para facilitar la impresión de la tabla
@@ -153,7 +155,6 @@ public class BenchmarkRunner {
                     // Formatear N para mostrar como 10^2, 10^3, etc.
                     String nStr = "";
                     if (N == 100) nStr = "10^2";
-                    else if (N == 1000) nStr = "10^3";
                     else if (N == 10000) nStr = "10^4";
                     else if (N == 1000000) nStr = "10^6";
                     else nStr = String.valueOf(N);
