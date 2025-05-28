@@ -45,3 +45,8 @@ Esta generada en el repositorio si quieres eliminarla
 ``
 rm -r data_generated
 ``
+
+#Ejecutar CoutingSort
+``
+java -cp bin com.example.gamedata.DatasetCountingSort?
+``
