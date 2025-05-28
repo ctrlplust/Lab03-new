@@ -48,5 +48,5 @@ rm -r data_generated
 
 # Ejecutar CoutingSort
 ``
-java -cp bin com.example.gamedata.DatasetCountingSort?
+java -cp bin com.example.gamedata.DatasetCountingSort
 ``
