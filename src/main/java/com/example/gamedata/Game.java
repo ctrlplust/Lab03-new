@@ -1,4 +1,4 @@
-package com.example.gamedata; // Asegúrate de usar tu estructura de paquete
+package com.example.gamedata;
 
 import java.util.Objects;
 
@@ -107,5 +107,4 @@ public class Game {
 
         System.out.println("\n--- Fin de Pruebas Game ---");
     }
-    // **************************************************
 }

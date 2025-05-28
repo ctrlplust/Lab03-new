@@ -1,4 +1,4 @@
-package com.example.gamedata; // Asegúrate de usar tu estructura de paquete
+package com.example.gamedata; // Ocupamos el paquete ya que es el mas adecuacdo para este laboratorio, Crear subcarpetas lo encontramos bastante necesario para organizar el código
 import java.util.List;
 import java.util.Comparator;
 import java.util.ArrayList;

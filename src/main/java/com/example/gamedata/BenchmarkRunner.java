@@ -23,7 +23,6 @@ public class BenchmarkRunner {
 
 
     // Estructura para almacenar los resultados para facilitar la impresión de la tabla
-    // Map<Atributo, Map<Algoritmo, Map<TamañoN, TiempoPromedioMs>>>
     static java.util.Map<String, java.util.Map<String, java.util.Map<Integer, Double>>> results = new java.util.HashMap<>();
 
 

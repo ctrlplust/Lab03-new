@@ -51,7 +51,7 @@ public class GenerateData {
 
     /**
      * @param N El número de juegos a generar.
-     * @return Una ArrayList de objetos Game generados aleatoriamente.
+     * @return 
      */
     public static ArrayList<Game> generateRandomGames(int N) {
         if (N <= 0) {

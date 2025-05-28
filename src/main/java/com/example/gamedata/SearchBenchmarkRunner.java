@@ -1,4 +1,4 @@
-package com.example.gamedata; // Ocupamos el paquete ya que es el mas adecuacdo para este laboratorio, Crear subcarpetas lo encontramos bastante necesario para organizar el código
+package com.example.gamedata; 
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -14,7 +14,6 @@ public class SearchBenchmarkRunner {
     private static final int NUMBER_OF_SEARCH_RUNS = 10; // Repetir cada búsqueda varias veces para promediar
     private static Random random = new Random();
 
-    // Estructura para resultados: Map<NombreMetodo, Map<TipoAlgoritmo, TiempoPromedioMs>>
     static java.util.Map<String, java.util.Map<String, Double>> searchResults = new java.util.HashMap<>();
 
     public static void main(String[] args) {
@@ -51,7 +50,7 @@ public class SearchBenchmarkRunner {
 
         //  3 Pruebas para getGamesByCategory 
         benchmarkSearch("getGamesByCategory", fullDatasetGames, dataset -> {
-            // Seleccionar una categoría aleatoria que EXISTA
+            
             Game randomGame = fullDatasetGames.get(random.nextInt(fullDatasetGames.size()));
             String categoryToSearch = randomGame.getCategory();
             return dataset.getGamesByCategory(categoryToSearch);
@@ -93,15 +92,13 @@ public class SearchBenchmarkRunner {
         long totalDurationBinaryNs = 0;
 
         // === Búsqueda Lineal ===
-        // Asegurarse de que el dataset no esté ordenado por el atributo relevante (o resetear sortedByAttribute)
-        Dataset linearDataset = new Dataset(new ArrayList<>(baseGames)); // Copia fresca
+        // Se asegurarse de que el dataset no esté ordenado por el atributo relevante
+        Dataset linearDataset = new Dataset(new ArrayList<>(baseGames)); 
         // Para forzar lineal, podríamos internamente en Dataset tener un método para resetear sortedByAttribute
         // o pasar un atributo de ordenamiento que no sea 'attributeToSortForBinary'.
         // Por ahora, confiamos en que un Dataset nuevo no está ordenado, o que los métodos de búsqueda
         // en Dataset chequean `sortedByAttribute` correctamente.
-        // Una forma explícita sería: linearDataset.forceAttributeSort(null) si tuviéramos ese método.
-        // O, si 'name' no es un atributo por el que ordenamos para búsqueda:
-        // linearDataset.sortByAlgorithm("collections.sort", "name", false); 
+        // Una forma explícita sería: linearDataset.forceAttributeSort(null) si tuviéramos ese método. 
         // La forma más simple es que el constructor de Dataset ponga sortedByAttribute a null.
 
         System.out.print("  Lineal: ");
@@ -126,11 +123,7 @@ public class SearchBenchmarkRunner {
         // === Búsqueda Binaria ===
         // Primero, ordenar el dataset por el atributo relevante
         Dataset binaryDataset = new Dataset(new ArrayList<>(baseGames));
-        // System.out.print("  Ordenando para binaria por " + attributeToSortForBinary + "... ");
-        // long sortStartTime = System.nanoTime();
-        binaryDataset.sortByAlgorithm("collections.sort", attributeToSortForBinary, false); // Usar el más rápido
-        // long sortEndTime = System.nanoTime();
-        // System.out.println("hecho en " + (sortEndTime - sortStartTime)/1_000_000.0 + " ms.");
+        binaryDataset.sortByAlgorithm("collections.sort", attributeToSortForBinary, false);
 
         System.out.print("  Binaria: ");
         for (int i = 0; i < NUMBER_OF_SEARCH_RUNS; i++) {
