@@ -268,7 +268,10 @@ public class Dataset {
                 selectedComparator = QUALITY_COMPARATOR;
                 break;
             case "price":
+                selectedComparator = PRICE_COMPARATOR;
+                break;
             default:
+                System.err.println("Atributo desconocido: " + attribute + ". Usando 'price' por defecto.");
                 selectedComparator = PRICE_COMPARATOR;
                 effectiveAttribute = "price";
                 break;
